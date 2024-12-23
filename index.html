@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Win-Loss Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h1 { text-align: center; }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            body { margin: 10px; }
+            th, td { padding: 5px; font-size: 14px; }
+            table { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Around the Table</h1>
+
+    <table id="playerTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Net Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Player rows will be added here -->
+        </tbody>
+    </table>
+
+    <h2>Results</h2>
+    <div id="results"></div>
+
+    <script>
+        const players = [
+            { name: 'Corey', wins: 3, losses: 9 },
+            { name: 'Jerry', wins: 4, losses: 12 },
+            { name: 'Larry', wins: 5, losses: 9 },
+            { name: 'Ramiz', wins: 4, losses: 13 },
+            { name: 'Bruno', wins: 7, losses: 9 }
+        ];
+
+        function addPlayer() {
+            const name = document.getElementById('name').value;
+            const wins = parseInt(document.getElementById('wins').value);
+            const losses = parseInt(document.getElementById('losses').value);
+
+            if (name && !isNaN(wins) && !isNaN(losses)) {
+                players.push({ name, wins, losses });
+                updateTable();
+                calculateBalances();
+            }
+        }
+
+        function updateTable() {
+            const tbody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+
+            players.forEach((player, index) => {
+                const row = tbody.insertRow();
+                const nameCell = row.insertCell();
+                const winsCell = row.insertCell();
+                const lossesCell = row.insertCell();
+                const balanceCell = row.insertCell();
+
+                nameCell.contentEditable = 'true';
+                winsCell.contentEditable = 'true';
+                lossesCell.contentEditable = 'true';
+
+                nameCell.textContent = player.name;
+                winsCell.textContent = player.wins;
+                lossesCell.textContent = player.losses;
+                balanceCell.textContent = calculateNetBalance(player);
+
+                row.oninput = () => {
+                    players[index].name = nameCell.textContent;
+                    players[index].wins = parseInt(winsCell.textContent) || 0;
+                    players[index].losses = parseInt(lossesCell.textContent) || 0;
+                    updateTable();
+                    calculateBalances();
+                };
+            });
+        }
+
+        function calculateNetBalance(player) {
+            const totalPlayers = players.length;
+            const winAmount = player.wins * 5 * (totalPlayers - 1);
+            const lossAmount = player.losses * 5 * (totalPlayers - 1);
+            return winAmount - lossAmount;
+        }
+
+        function calculateBalances() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const matrixTable = document.createElement('table');
+            matrixTable.style.borderCollapse = 'collapse';
+            matrixTable.style.marginTop = '20px';
+            const headerRow = matrixTable.insertRow();
+            headerRow.insertCell().textContent = 'Player / Owes';
+            players.forEach(player => {
+                const headerCell = headerRow.insertCell();
+                headerCell.textContent = player.name;
+                headerCell.style.fontWeight = 'bold';
+            });
+
+            players.forEach(player => {
+                const row = matrixTable.insertRow();
+                const nameCell = row.insertCell();
+                nameCell.textContent = player.name;
+                nameCell.style.fontWeight = 'bold';
+
+                players.forEach(otherPlayer => {
+                    const cell = row.insertCell();
+                    cell.style.border = '1px solid #ddd';
+                    cell.style.padding = '8px';
+                    if (player !== otherPlayer) {
+                        const playerNet = calculateNetBalance(player) / (players.length - 1);
+                        const otherPlayerNet = calculateNetBalance(otherPlayer) / (players.length - 1);
+                        const difference = otherPlayerNet - playerNet;
+                        cell.textContent = difference > 0 ? `$${difference.toFixed(2)}` : '-';
+                    } else {
+                        cell.textContent = '-';
+                    }
+                });
+            });
+
+            resultsDiv.appendChild(matrixTable);
+        }
+
+        updateTable();
+        calculateBalances();
+    </script>
+</body>
+</html>
