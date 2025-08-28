@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Around the Table</title>
+    <title>Around the Table - 2025 Season</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -20,28 +22,140 @@
     </style>
 </head>
 <body>
-    <h1>Around the Table</h1>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-football-ball"></i>
+                <span>Around the Table</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link active">2025 Season</a>
+                </li>
+                <li class="nav-item">
+                    <a href="picks.html" class="nav-link">Season Picks</a>
+                </li>
+                <li class="nav-item">
+                    <a href="odds.html" class="nav-link">NFL Odds</a>
+                </li>
+                <li class="nav-item">
+                    <a href="2024.html" class="nav-link">2024 Season</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
 
-    <table id="playerTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Net Balance</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Player rows will be added here -->
-        </tbody>
-    </table>
+    <main class="main-content">
+        <div class="hero-section">
+            <h1><i class="fas fa-trophy"></i> 2025 Season Standings</h1>
+            <p class="season-info">Week <span id="currentWeek">1</span> • $5 per pick • Underdogs only</p>
+        </div>
 
-    <h2>Results</h2>
-    <div id="results"></div>
-    <br>
-    <div><h4>Bruno is the 2024 Around the Table World Champion</h4>
-    </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalPlayers">5</h3>
+                    <p>Players</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalWeeks">18</h3>
+                    <p>Weeks</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalMoney">$0</h3>
+                    <p>Total Pool</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="leader">-</h3>
+                    <p>Current Leader</p>
+                </div>
+            </div>
+        </div>
 
+        <div class="standings-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list-ol"></i> Current Standings</h2>
+                <button id="refreshBtn" class="btn btn-secondary">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table id="playerTable" class="standings-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Win %</th>
+                            <th>Net Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Player rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="payout-section">
+            <div class="section-header">
+                <h2><i class="fas fa-calculator"></i> End of Season Payouts</h2>
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="showPayouts">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Show Payout Matrix</span>
+                </div>
+            </div>
+            
+            <div id="payoutMatrix" class="payout-matrix" style="display: none;">
+                <!-- Payout matrix will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="champion-section" id="championSection" style="display: none;">
+            <div class="champion-card">
+                <i class="fas fa-crown"></i>
+                <h2 id="championName">2025 Around the Table World Champion</h2>
+                <p>Congratulations on your victory!</p>
+            </div>
+        </div>
+
+        <!-- Automated Result Checking Section -->
+        <section class="card">
+            <div id="result-checker"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Around the Table • NFL Underdog Betting League</p>
+    </footer>
 
     <script>
         const players = [
@@ -70,18 +184,22 @@
 
             players.forEach((player, index) => {
                 const row = tbody.insertRow();
+                const rankCell = row.insertCell();
                 const nameCell = row.insertCell();
                 const winsCell = row.insertCell();
                 const lossesCell = row.insertCell();
+                const winPercentCell = row.insertCell();
                 const balanceCell = row.insertCell();
 
                 nameCell.contentEditable = 'true';
                 winsCell.contentEditable = 'true';
                 lossesCell.contentEditable = 'true';
 
+                rankCell.textContent = index + 1;
                 nameCell.textContent = player.name;
                 winsCell.textContent = player.wins;
                 lossesCell.textContent = player.losses;
+                winPercentCell.textContent = `${(player.wins / (player.wins + player.losses) * 100).toFixed(2)}%`;
                 balanceCell.textContent = calculateNetBalance(player);
 
                 row.oninput = () => {
@@ -102,8 +220,8 @@
         }
 
         function calculateBalances() {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
+            const payoutMatrix = document.getElementById('payoutMatrix');
+            payoutMatrix.innerHTML = '';
 
             const matrixTable = document.createElement('table');
             matrixTable.style.borderCollapse = 'collapse';
@@ -137,11 +255,15 @@
                 });
             });
 
-            resultsDiv.appendChild(matrixTable);
+            payoutMatrix.appendChild(matrixTable);
         }
 
         updateTable();
         calculateBalances();
     </script>
+    <script src="env-config.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+    <script src="results.js"></script>
 </body>
 </html>

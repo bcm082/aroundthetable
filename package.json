@@ -1,0 +1,17 @@
+{
+  "name": "around-the-table-nfl-betting",
+  "version": "1.0.0",
+  "description": "NFL betting tracker for Around the Table group",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "python3 -m http.server 8000"
+  },
+  "keywords": ["nfl", "betting", "tracker", "odds"],
+  "author": "Bruno Martins",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

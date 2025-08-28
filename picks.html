@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Around the Table - Make Picks</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-football-ball"></i>
+                <span>Around the Table</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">2025 Season</a>
+                </li>
+                <li class="nav-item">
+                    <a href="picks.html" class="nav-link active">Season Picks</a>
+                </li>
+                <li class="nav-item">
+                    <a href="odds.html" class="nav-link">NFL Odds</a>
+                </li>
+                <li class="nav-item">
+                    <a href="2024.html" class="nav-link">2024 Season</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="hero-section">
+            <h1><i class="fas fa-clipboard-list"></i> Season Picks</h1>
+            <p class="season-info">View all picks by week • Loaded from picks.csv</p>
+        </div>
+
+        <div class="picks-controls">
+            <div class="control-group">
+                <label for="weekPickSelect">Filter by Week:</label>
+                <select id="weekPickSelect" class="form-select">
+                    <option value="all">All Weeks</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="playerFilter">Filter by Player:</label>
+                <select id="playerFilter" class="form-select">
+                    <option value="all">All Players</option>
+                    <option value="Corey">Corey</option>
+                    <option value="Jerry">Jerry</option>
+                    <option value="Larry">Larry</option>
+                    <option value="Ramiz">Ramiz</option>
+                    <option value="Bruno">Bruno</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <button id="refreshPicksBtn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh Picks
+                </button>
+            </div>
+        </div>
+
+        <div class="picks-display-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list-alt"></i> Season Picks</h2>
+                <div class="picks-summary">
+                    <span id="picksSummary">Loading picks...</span>
+                </div>
+            </div>
+            
+            <div id="picksContainer" class="picks-container">
+                <!-- Picks will be populated by JavaScript -->
+            </div>
+        </div>
+
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Around the Table • NFL Underdog Betting League</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="odds.js"></script>
+    <script src="picks.js"></script>
+    
+    <style>
+        .picks-controls {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .current-picks-section,
+        .make-pick-section,
+        .picks-rules {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .picks-summary {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+        
+        .picks-container {
+            margin-top: 2rem;
+        }
+        
+        .week-section {
+            background: var(--gray-50);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .week-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .week-picks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .pick-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .pick-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+            border-color: var(--primary-color);
+        }
+        
+        .pick-player {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .pick-team {
+            font-size: 1rem;
+            color: var(--gray-800);
+            margin-bottom: 0.25rem;
+        }
+        
+        .pick-meta {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+        
+        .code-example {
+            background: var(--gray-800);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-example pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .csv-info-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .info-card {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .info-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .available-underdogs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .underdog-option {
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .underdog-option:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .underdog-option.selected {
+            border-color: var(--success-color);
+            background: var(--gray-50);
+        }
+        
+        .underdog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .underdog-team {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .underdog-spread {
+            background: var(--success-color);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .underdog-matchup {
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+        
+        .underdog-game-time {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+        
+        .pick-confirmation {
+            margin-top: 2rem;
+        }
+        
+        .confirmation-card {
+            border: 2px solid var(--success-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            background: var(--gray-50);
+        }
+        
+        .confirmation-card h3 {
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .pick-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .confirmation-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .rule-card {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .rule-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rule-card p {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+        
+        .no-underdogs {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+        
+        .no-underdogs h3 {
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .picks-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+            
+            .week-picks {
+                grid-template-columns: 1fr;
+            }
+            
+            .available-underdogs {
+                grid-template-columns: 1fr;
+            }
+            
+            .pick-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .confirmation-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

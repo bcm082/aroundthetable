@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Around the Table - NFL Odds</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-football-ball"></i>
+                <span>Around the Table</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">2025 Season</a>
+                </li>
+                <li class="nav-item">
+                    <a href="picks.html" class="nav-link">Season Picks</a>
+                </li>
+                <li class="nav-item">
+                    <a href="odds.html" class="nav-link active">NFL Odds</a>
+                </li>
+                <li class="nav-item">
+                    <a href="2024.html" class="nav-link">2024 Season</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="hero-section">
+            <h1><i class="fas fa-chart-line"></i> NFL Odds & Lines</h1>
+            <p class="season-info">Live odds for underdog betting • Updated every 15 minutes</p>
+        </div>
+
+        <div class="odds-controls">
+            <div class="control-group">
+                <label for="weekFilter">Week:</label>
+                <select id="weekFilter" class="form-select">
+                    <option value="all">All Weeks</option>
+                    <!-- Week options will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <button id="refreshOdds" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh Odds
+                </button>
+            </div>
+        </div>
+
+        <div class="api-status" id="apiStatus">
+            <div class="status-indicator">
+                <i class="fas fa-circle" id="statusIcon"></i>
+                <span id="statusText">Connecting to odds API...</span>
+            </div>
+            <div class="last-updated">
+                Last updated: <span id="lastUpdated">Never</span>
+            </div>
+        </div>
+
+        <div class="odds-section">
+            <div class="section-header">
+                <h2><i class="fas fa-football-ball"></i> Game Lines</h2>
+                <div class="odds-legend">
+                    <span class="legend-item">
+                        <span class="underdog-indicator"></span> Underdog
+                    </span>
+                    <span class="legend-item">
+                        <span class="favorite-indicator"></span> Favorite
+                    </span>
+                </div>
+            </div>
+            
+            <div id="oddsContainer" class="odds-container">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading NFL odds...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="odds-info">
+            <div class="section-header">
+                <h2><i class="fas fa-info-circle"></i> How to Read the Odds</h2>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-plus"></i> Positive Odds (+150)</h3>
+                    <p>The underdog. A +150 means you win $150 for every $100 bet. These are the teams you can pick for Around the Table.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-minus"></i> Negative Odds (-200)</h3>
+                    <p>The favorite. A -200 means you need to bet $200 to win $100. You cannot pick these teams in our game.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-chart-line"></i> Point Spread</h3>
+                    <p>The predicted margin of victory. A team with +7.5 is expected to lose by 7.5 points or less.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-clock"></i> Live Updates</h3>
+                    <p>Odds change throughout the week based on betting action and team news. Check back regularly for the latest lines.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Around the Table • NFL Underdog Betting League</p>
+    </footer>
+
+    <script src="env-config.js"></script>
+    <script src="app.js"></script>
+    <script src="config.js"></script>
+    <script src="odds.js"></script>
+    
+    <style>
+        .odds-controls {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+        
+        .form-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            background: var(--white);
+            color: var(--gray-800);
+            font-size: 1rem;
+            min-width: 150px;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .api-status {
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-indicator i {
+            font-size: 0.8rem;
+        }
+        
+        .status-indicator i.connected {
+            color: var(--success-color);
+        }
+        
+        .status-indicator i.error {
+            color: var(--danger-color);
+        }
+        
+        .status-indicator i.loading {
+            color: var(--warning-color);
+        }
+        
+        .last-updated {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+        
+        .odds-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .odds-legend {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        .underdog-indicator,
+        .favorite-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .underdog-indicator {
+            background: var(--success-color);
+        }
+        
+        .favorite-indicator {
+            background: var(--danger-color);
+        }
+        
+        .odds-container {
+            margin-top: 2rem;
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .loading-spinner p {
+            margin-top: 1rem;
+            color: var(--gray-600);
+        }
+        
+        .game-card {
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        
+        .game-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .game-card.underdog-game {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .game-time {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+        
+        .game-matchup {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .team {
+            text-align: center;
+        }
+        
+        .team-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-record {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+        
+        .team.underdog .team-name {
+            color: var(--success-color);
+        }
+        
+        .team.favorite .team-name {
+            color: var(--danger-color);
+        }
+        
+        .odds-display {
+            text-align: center;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--border-radius);
+        }
+        
+        .spread {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .moneyline {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        .odds-info {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .info-card {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-card p {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .odds-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+            
+            .api-status {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+            
+            .odds-legend {
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            
+            .game-matchup {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .odds-display {
+                order: -1;
+            }
+        }
+    </style>
+</body>
+</html>
